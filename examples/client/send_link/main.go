@@ -51,13 +51,15 @@ func main() {
 	}
 	resp, mldErr, err := c.LinkCreate(ctx, req)
 	if err != nil {
+		if mldErr.Code != 0 {
+			sugared = sugared.With(
+				"code", mldErr.Code,
+				"message", mldErr.Message,
+				"requestUUID", mldErr.RequestMetadata.UUID,
+			)
+		}
 		sugared.Fatalw("Failed to create link.",
 			mld.LogErr, err,
-		)
-	}
-	if mldErr.Code != 0 {
-		sugared.Fatalw("Failed to create link.",
-			"mldErr", mldErr,
 		)
 	}
 

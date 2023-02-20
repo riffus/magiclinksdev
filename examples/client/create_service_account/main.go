@@ -35,6 +35,13 @@ func main() {
 	}
 	resp, mldErr, err := c.ServiceAccountCreate(ctx, req)
 	if err != nil {
+		if mldErr.Code != 0 {
+			sugared = sugared.With(
+				"code", mldErr.Code,
+				"message", mldErr.Message,
+				"requestUUID", mldErr.RequestMetadata.UUID,
+			)
+		}
 		sugared.Fatalw("Failed to create service account.",
 			mld.LogErr, err,
 		)

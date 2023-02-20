@@ -43,33 +43,35 @@ func main() {
 			ButtonText:   "Log in",
 			Greeting:     "Hello John Doe,",
 			LogoClickURL: "https://magiclinks.dev",
-			LogoImageURL: "https://magiclinks.dev/typeface-gray.svg",
+			LogoImageURL: "https://magiclinks.dev/typeface-gray.png",
 			ServiceName:  "magiclinks.dev",
 			Subject:      "Your login for magiclinks.dev",
 			SubTitle:     "No password required!",
 			Title:        "Please click the below button to login.",
-			ToEmail:      "test@example.com",
-			ToName:       "John Doe",
+			ToEmail:      "micahleviparks@gmail.com",
+			ToName:       "Micah Parks",
 		},
 		LinkArgs: model.LinkCreateArgs{
 			JWTCreateArgs: model.JWTCreateArgs{
 				JWTClaims:          claims,
 				JWTLifespanSeconds: 5,
 			},
-			LinkLifespan:     100,
+			LinkLifespan:     60 * 60,
 			RedirectQueryKey: "",
 			RedirectURL:      "https://jwtdebug.micahparks.com",
 		},
 	}
 	resp, mldErr, err := c.EmailLinkCreate(ctx, req)
 	if err != nil {
+		if mldErr.Code != 0 {
+			sugared = sugared.With(
+				"code", mldErr.Code,
+				"message", mldErr.Message,
+				"requestUUID", mldErr.RequestMetadata.UUID,
+			)
+		}
 		sugared.Fatalw("Failed to create email link.",
 			mld.LogErr, err,
-		)
-	}
-	if mldErr.Code != 0 {
-		sugared.Fatalw("Failed to create email link.",
-			"mldErr", mldErr,
 		)
 	}
 

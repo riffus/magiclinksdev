@@ -12,7 +12,7 @@ info:
   \n
   The optional SaaS platform's landing page is: https://magiclinks.dev
   "
-  version: "0.0.1"
+  version: "1.0.0"
 
 host: "magiclinks.dev"
 basePath: "/api/v1"
